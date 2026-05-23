@@ -1,41 +1,62 @@
-using System.Collections.Concurrent;
+using KopiCarRental.Data;
 using KopiCarRental.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace KopiCarRental.Services;
 
 public class BookingService : IBookingService
 {
-    private readonly ICarCatalog catalog;
-    private readonly ConcurrentDictionary<string, Booking> bookings = new();
+    private readonly RentalDbContext context;
 
-    public BookingService(ICarCatalog catalog)
+    public BookingService(RentalDbContext context)
     {
-        this.catalog = catalog;
+        this.context = context;
     }
 
     public Booking Reserve(BookingRequest request)
     {
-        Car car = catalog.FindById(request.CarId);
-        Booking booking = new(
-            GenerateReference(),
-            car,
-            request.CustomerName,
-            request.CustomerEmail,
-            request.PickUpDate,
-            request.ReturnDate);
+        Car car = FindCar(request.CarId);
+        Booking booking = new()
+        {
+            Reference = GenerateReference(),
+            CarId = car.Id,
+            CustomerName = request.CustomerName,
+            CustomerEmail = request.CustomerEmail,
+            PickUpDate = request.PickUpDate,
+            ReturnDate = request.ReturnDate,
+            CreatedAtUtc = DateTime.UtcNow
+        };
 
-        bookings[booking.Reference] = booking;
+        context.Bookings.Add(booking);
+        context.SaveChanges();
+
+        booking.Car = car;
         return booking;
     }
 
     public Booking FindByReference(string reference)
     {
-        if (bookings.TryGetValue(reference, out Booking? booking))
+        Booking? booking = context.Bookings.AsNoTracking()
+            .Include(b => b.Car)
+            .FirstOrDefault(b => b.Reference == reference);
+
+        if (booking is null)
         {
-            return booking;
+            throw new BookingNotFoundException(reference);
         }
 
-        throw new BookingNotFoundException(reference);
+        return booking;
+    }
+
+    private Car FindCar(int carId)
+    {
+        Car? car = context.Cars.FirstOrDefault(c => c.Id == carId);
+        if (car is null)
+        {
+            throw new CarNotFoundException(carId);
+        }
+
+        return car;
     }
 
     private static string GenerateReference()

@@ -1,5 +1,7 @@
 using KopiCarRental.Components;
+using KopiCarRental.Data;
 using KopiCarRental.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddSingleton<ICarCatalog, CarCatalog>();
-builder.Services.AddSingleton<IBookingService, BookingService>();
+string connectionString = builder.Configuration.GetConnectionString("RentalDatabase")
+    ?? throw new InvalidOperationException("Connection string 'RentalDatabase' is not configured.");
+
+builder.Services.AddDbContext<RentalDbContext>(options =>
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 45))));
+
+builder.Services.AddScoped<ICarCatalog, CarCatalog>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
 
