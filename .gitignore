@@ -1,0 +1,18 @@
+## .NET build output
+bin/
+obj/
+out/
+
+## Rider / VS / VS Code
+.vs/
+.idea/
+*.user
+*.suo
+
+## Environment / secrets
+appsettings.*.local.json
+*.env
+
+## OS
+.DS_Store
+Thumbs.db

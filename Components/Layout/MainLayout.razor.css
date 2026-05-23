@@ -1,0 +1,84 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+.site-footer {
+    background: var(--accent);
+    color: #cfd6e0;
+    padding: 56px 0 28px;
+    margin-top: 80px;
+}
+
+.footer-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 48px;
+    flex-wrap: wrap;
+    padding-bottom: 36px;
+    border-bottom: 1px solid rgba(255, 255, 255, .10);
+}
+
+.brand-mark {
+    font-family: "Sora", sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    color: #fff;
+}
+
+.brand-dot {
+    color: var(--brand);
+}
+
+.footer-blurb {
+    max-width: 280px;
+    margin: 14px 0 0;
+    font-size: 14px;
+    color: #9aa4b2;
+}
+
+.footer-cols {
+    display: flex;
+    gap: 64px;
+}
+
+.footer-cols h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #fff;
+    margin-bottom: 14px;
+}
+
+.footer-cols a {
+    display: block;
+    font-size: 14px;
+    color: #9aa4b2;
+    padding: 5px 0;
+    transition: color .15s ease;
+}
+
+.footer-cols a:hover {
+    color: #fff;
+}
+
+.footer-base {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 24px;
+    font-size: 13px;
+    color: #788294;
+}
+
+@media (max-width: 640px) {
+    .footer-cols {
+        gap: 40px;
+    }
+}

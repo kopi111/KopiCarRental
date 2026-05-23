@@ -1,0 +1,81 @@
+.browse {
+    padding-top: 48px;
+}
+
+.browse-head {
+    margin-bottom: 28px;
+}
+
+.browse-head .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--brand);
+}
+
+.browse-head h1 {
+    font-size: clamp(32px, 5vw, 44px);
+    margin: 8px 0 6px;
+}
+
+.browse-head p {
+    color: var(--ink-soft);
+    margin: 0;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 32px;
+}
+
+.car-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.empty {
+    text-align: center;
+    padding: 72px 20px;
+    background: var(--surface);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+}
+
+.empty-icon {
+    font-size: 34px;
+}
+
+.empty h3 {
+    font-size: 22px;
+    margin: 14px 0 6px;
+}
+
+.empty p {
+    color: var(--ink-soft);
+    margin: 0 0 20px;
+}
+
+@media (max-width: 900px) {
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .car-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 901px) and (max-width: 1100px) {
+    .car-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

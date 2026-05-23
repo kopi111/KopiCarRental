@@ -1,0 +1,37 @@
+.lookup {
+    padding: 64px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.lookup-card {
+    width: 100%;
+    max-width: 460px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 36px;
+    box-shadow: var(--shadow-md);
+}
+
+.lookup-card .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--brand);
+}
+
+.lookup-card h1 {
+    font-size: 30px;
+    margin: 8px 0 8px;
+}
+
+.lookup-card > p {
+    color: var(--ink-soft);
+    margin: 0 0 24px;
+}
+
+.lookup-card .field {
+    margin-bottom: 16px;
+}

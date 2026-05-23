@@ -1,0 +1,147 @@
+@page "/cars/{Id:int}"
+@rendermode InteractiveServer
+@inject ICarCatalog Catalog
+@inject IBookingService Bookings
+@inject NavigationManager Navigation
+
+<PageTitle>@title</PageTitle>
+
+@if (car is null)
+{
+    <section class="shell missing">
+        <h1>Car not found</h1>
+        <p>We couldn't find that vehicle. It may have been removed from the fleet.</p>
+        <a class="btn btn-primary" href="/cars">Back to the fleet</a>
+    </section>
+}
+else
+{
+    <section class="shell detail">
+        <a class="back-link" href="/cars">← Back to all cars</a>
+
+        <div class="detail-grid">
+            <div class="detail-media">
+                <img src="@car.ImageUrl" alt="@car.DisplayName" />
+            </div>
+
+            <div class="detail-info">
+                <span class="pill">@car.Category</span>
+                <h1>@car.DisplayName</h1>
+                <p class="model-year">@car.Year model</p>
+
+                <div class="spec-grid">
+                    <div class="spec"><span>Seats</span><strong>@car.SeatCount</strong></div>
+                    <div class="spec"><span>Transmission</span><strong>@car.Transmission</strong></div>
+                    <div class="spec"><span>Fuel</span><strong>@car.FuelType</strong></div>
+                    <div class="spec"><span>Daily rate</span><strong>$@car.PricePerDay.ToString("0")</strong></div>
+                </div>
+
+                <div class="book-panel">
+                    @if (!car.IsAvailable)
+                    {
+                        <div class="booked-note">
+                            This car is currently booked. Browse the fleet for available alternatives.
+                            <a class="btn btn-ghost btn-block" href="/cars">See available cars</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <h2>Reserve this car</h2>
+                        <EditForm Model="request" OnValidSubmit="Reserve" FormName="booking">
+                            <DataAnnotationsValidator />
+
+                            <div class="field">
+                                <label>Full name</label>
+                                <InputText @bind-Value="request.CustomerName" placeholder="Jane Doe" />
+                                <ValidationMessage For="() => request.CustomerName" />
+                            </div>
+
+                            <div class="field">
+                                <label>Email</label>
+                                <InputText @bind-Value="request.CustomerEmail" placeholder="jane@email.com" />
+                                <ValidationMessage For="() => request.CustomerEmail" />
+                            </div>
+
+                            <div class="date-row">
+                                <div class="field">
+                                    <label>Pick-up</label>
+                                    <InputDate @bind-Value="request.PickUpDate" />
+                                </div>
+                                <div class="field">
+                                    <label>Return</label>
+                                    <InputDate @bind-Value="request.ReturnDate" />
+                                </div>
+                            </div>
+
+                            @if (dateError is not null)
+                            {
+                                <p class="validation-message">@dateError</p>
+                            }
+
+                            <div class="quote">
+                                <span>@RentalDays day@(RentalDays == 1 ? "" : "s") × $@car.PricePerDay.ToString("0")</span>
+                                <strong>$@EstimatedTotal.ToString("0")</strong>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">Confirm booking</button>
+                        </EditForm>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Car? car;
+    private string title = "KOPI Car Rental";
+    private BookingRequest request = new();
+    private string? dateError;
+
+    private int RentalDays => Math.Max(1, request.ReturnDate.DayNumber - request.PickUpDate.DayNumber);
+
+    private decimal EstimatedTotal => car is null ? 0 : RentalDays * car.PricePerDay;
+
+    protected override void OnInitialized()
+    {
+        car = TryLoadCar();
+        if (car is not null)
+        {
+            title = $"{car.DisplayName} — KOPI Car Rental";
+            request.CarId = car.Id;
+        }
+    }
+
+    private Car? TryLoadCar()
+    {
+        try
+        {
+            return Catalog.FindById(Id);
+        }
+        catch (CarNotFoundException)
+        {
+            return null;
+        }
+    }
+
+    private void Reserve()
+    {
+        if (!DatesAreValid())
+        {
+            dateError = "The return date must be after the pick-up date.";
+            return;
+        }
+
+        dateError = null;
+        Booking booking = Bookings.Reserve(request);
+        Navigation.NavigateTo($"/confirmation/{booking.Reference}");
+    }
+
+    private bool DatesAreValid()
+    {
+        return request.ReturnDate.DayNumber > request.PickUpDate.DayNumber;
+    }
+}

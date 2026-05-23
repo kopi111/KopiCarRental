@@ -1,0 +1,42 @@
+@inherits LayoutComponentBase
+
+<div class="page">
+    <NavMenu />
+
+    <main>
+        @Body
+    </main>
+
+    <footer class="site-footer">
+        <div class="shell footer-grid">
+            <div>
+                <span class="brand-mark">KOPI<span class="brand-dot">.</span>rentals</span>
+                <p class="footer-blurb">Premium cars, booked in minutes. Drive away the same day.</p>
+            </div>
+            <div class="footer-cols">
+                <div>
+                    <h4>Explore</h4>
+                    <a href="/cars">Browse fleet</a>
+                    <a href="/cars">Electric</a>
+                    <a href="/cars">SUVs</a>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <a href="/">About</a>
+                    <a href="/">Locations</a>
+                    <a href="/">Contact</a>
+                </div>
+            </div>
+        </div>
+        <div class="shell footer-base">
+            <span>© @DateTime.Now.Year KOPI Car Rental</span>
+            <span>Made for the open road.</span>
+        </div>
+    </footer>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

@@ -1,0 +1,133 @@
+.confirm {
+    padding: 56px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.confirm-card {
+    width: 100%;
+    max-width: 560px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.check {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    border-radius: 999px;
+    background: #e8f7ee;
+    color: #1f9d52;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.confirm-card h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.confirm-card > p {
+    color: var(--ink-soft);
+    margin: 0 auto 26px;
+    max-width: 400px;
+}
+
+.reference {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: var(--brand-tint);
+    border: 1px dashed var(--brand);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.reference span {
+    font-size: 12.5px;
+    color: var(--brand-dark);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 600;
+}
+
+.reference strong {
+    font-family: "Sora", sans-serif;
+    font-size: 26px;
+    color: var(--ink);
+    letter-spacing: .04em;
+}
+
+.summary {
+    text-align: left;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.summary-car {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.summary-car img {
+    width: 76px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.summary-car h3 {
+    font-size: 17px;
+}
+
+.summary-car span {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.summary-lines {
+    margin: 0;
+    padding: 8px 16px;
+}
+
+.summary-lines div {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.summary-lines div:last-child {
+    border-bottom: 0;
+}
+
+.summary-lines dt {
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin: 0;
+}
+
+.summary-lines dd {
+    margin: 0;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.summary-lines .total dt,
+.summary-lines .total dd {
+    font-family: "Sora", sans-serif;
+    font-size: 18px;
+    color: var(--ink);
+}

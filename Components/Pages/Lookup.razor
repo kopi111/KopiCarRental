@@ -1,0 +1,59 @@
+@page "/lookup"
+@rendermode InteractiveServer
+@inject IBookingService Bookings
+@inject NavigationManager Navigation
+
+<PageTitle>Find my booking — KOPI Car Rental</PageTitle>
+
+<section class="shell lookup">
+    <div class="lookup-card">
+        <span class="eyebrow">Manage</span>
+        <h1>Find your booking</h1>
+        <p>Enter the reference from your confirmation (it starts with <strong>KOPI-</strong>).</p>
+
+        <div class="field">
+            <label for="ref">Booking reference</label>
+            <input id="ref" type="text" placeholder="KOPI-XXXXXX"
+                   @bind="reference" @bind:event="oninput" @onkeydown="OnKeyDown" />
+        </div>
+
+        @if (notFound)
+        {
+            <p class="validation-message">No booking matches that reference. Check it and try again.</p>
+        }
+
+        <button class="btn btn-primary btn-block" @onclick="FindBooking">Find booking</button>
+    </div>
+</section>
+
+@code {
+    private string reference = "";
+    private bool notFound;
+
+    private void OnKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            FindBooking();
+        }
+    }
+
+    private void FindBooking()
+    {
+        string trimmed = reference.Trim();
+        if (trimmed.Length == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            Bookings.FindByReference(trimmed);
+            Navigation.NavigateTo($"/confirmation/{trimmed}");
+        }
+        catch (BookingNotFoundException)
+        {
+            notFound = true;
+        }
+    }
+}

@@ -1,0 +1,40 @@
+<div class="car-card">
+    <div class="car-photo">
+        <img src="@Car.ImageUrl" alt="@Car.DisplayName" loading="lazy" />
+        <span class="car-category">@Car.Category</span>
+        @if (!Car.IsAvailable)
+        {
+            <span class="car-unavailable">Booked</span>
+        }
+    </div>
+    <div class="car-body">
+        <div class="car-head">
+            <h3>@Car.DisplayName</h3>
+            <span class="car-year">@Car.Year</span>
+        </div>
+        <div class="car-specs">
+            <span class="tag">@Car.SeatCount seats</span>
+            <span class="tag">@Car.Transmission</span>
+            <span class="tag">@Car.FuelType</span>
+        </div>
+        <div class="car-foot">
+            <div class="car-price">
+                <span class="amount">$@Car.PricePerDay.ToString("0")</span>
+                <span class="per">/ day</span>
+            </div>
+            @if (Car.IsAvailable)
+            {
+                <a class="btn btn-primary car-btn" href="@($"/cars/{Car.Id}")">View</a>
+            }
+            else
+            {
+                <a class="btn btn-ghost car-btn" href="@($"/cars/{Car.Id}")">Details</a>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Car Car { get; set; } = default!;
+}

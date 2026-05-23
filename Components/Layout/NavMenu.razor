@@ -1,0 +1,50 @@
+@implements IDisposable
+@inject NavigationManager Navigation
+
+<header class="navbar">
+    <div class="shell navbar-inner">
+        <a class="brand" href="/">
+            <span class="brand-badge">K</span>
+            <span class="brand-text">KOPI<span class="brand-dot">.</span>rentals</span>
+        </a>
+
+        <nav class="nav-links">
+            <a class="@LinkClass("")" href="/">Home</a>
+            <a class="@LinkClass("cars")" href="/cars">Browse Cars</a>
+            <a class="@LinkClass("lookup")" href="/lookup">My Booking</a>
+        </nav>
+
+        <a class="btn btn-primary nav-cta" href="/cars">Book a car</a>
+    </div>
+</header>
+
+@code {
+    private string currentPath = "";
+
+    protected override void OnInitialized()
+    {
+        UpdatePath();
+        Navigation.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs args)
+    {
+        UpdatePath();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void UpdatePath()
+    {
+        currentPath = Navigation.ToBaseRelativePath(Navigation.Uri).Split('/')[0].Split('?')[0];
+    }
+
+    private string LinkClass(string path)
+    {
+        return currentPath.Equals(path, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= OnLocationChanged;
+    }
+}

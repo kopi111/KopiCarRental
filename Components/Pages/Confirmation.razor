@@ -1,0 +1,72 @@
+@page "/confirmation/{Reference}"
+@inject IBookingService Bookings
+
+<PageTitle>Booking confirmed — KOPI Car Rental</PageTitle>
+
+<section class="shell confirm">
+    @if (booking is null)
+    {
+        <div class="confirm-card">
+            <h1>Booking not found</h1>
+            <p>We couldn't find a booking with reference <strong>@Reference</strong>.</p>
+            <a class="btn btn-primary" href="/cars">Browse the fleet</a>
+        </div>
+    }
+    else
+    {
+        <div class="confirm-card">
+            <span class="check">✓</span>
+            <h1>You're all set, @FirstName!</h1>
+            <p>Your booking is confirmed. We've noted the details below — keep your reference handy at pickup.</p>
+
+            <div class="reference">
+                <span>Booking reference</span>
+                <strong>@booking.Reference</strong>
+            </div>
+
+            <div class="summary">
+                <div class="summary-car">
+                    <img src="@booking.Car.ImageUrl" alt="@booking.Car.DisplayName" />
+                    <div>
+                        <h3>@booking.Car.DisplayName</h3>
+                        <span>@booking.Car.Category · @booking.Car.Transmission</span>
+                    </div>
+                </div>
+                <dl class="summary-lines">
+                    <div><dt>Pick-up</dt><dd>@booking.PickUpDate.ToString("ddd, dd MMM yyyy")</dd></div>
+                    <div><dt>Return</dt><dd>@booking.ReturnDate.ToString("ddd, dd MMM yyyy")</dd></div>
+                    <div><dt>Duration</dt><dd>@booking.RentalDays day@(booking.RentalDays == 1 ? "" : "s")</dd></div>
+                    <div class="total"><dt>Total</dt><dd>$@booking.TotalPrice.ToString("0")</dd></div>
+                </dl>
+            </div>
+
+            <a class="btn btn-ghost btn-block" href="/cars">Book another car</a>
+        </div>
+    }
+</section>
+
+@code {
+    [Parameter]
+    public string Reference { get; set; } = "";
+
+    private Booking? booking;
+
+    private string FirstName => booking?.CustomerName.Split(' ')[0] ?? "";
+
+    protected override void OnInitialized()
+    {
+        booking = TryLoadBooking();
+    }
+
+    private Booking? TryLoadBooking()
+    {
+        try
+        {
+            return Bookings.FindByReference(Reference);
+        }
+        catch (BookingNotFoundException)
+        {
+            return null;
+        }
+    }
+}

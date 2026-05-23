@@ -1,0 +1,104 @@
+@page "/cars"
+@rendermode InteractiveServer
+@inject ICarCatalog Catalog
+
+<PageTitle>Browse the fleet — KOPI Car Rental</PageTitle>
+
+<section class="shell browse">
+    <header class="browse-head">
+        <span class="eyebrow">The fleet</span>
+        <h1>Find your ride</h1>
+        <p>@results.Count car@(results.Count == 1 ? "" : "s") available to book right now.</p>
+    </header>
+
+    <div class="filters">
+        <div class="field search">
+            <label for="search">Search</label>
+            <input id="search" type="text" placeholder="Make or model…"
+                   @bind="searchTerm" @bind:event="oninput" @bind:after="ApplyFilter" />
+        </div>
+        <div class="field">
+            <label for="category">Category</label>
+            <select id="category" @bind="selectedCategory" @bind:after="ApplyFilter">
+                <option value="">All categories</option>
+                @foreach (CarCategory category in categories)
+                {
+                    <option value="@category">@category</option>
+                }
+            </select>
+        </div>
+        <div class="field">
+            <label for="price">Max price / day</label>
+            <select id="price" @bind="maxPrice" @bind:after="ApplyFilter">
+                <option value="">Any price</option>
+                <option value="60">Up to $60</option>
+                <option value="100">Up to $100</option>
+                <option value="150">Up to $150</option>
+            </select>
+        </div>
+    </div>
+
+    @if (results.Count == 0)
+    {
+        <div class="empty">
+            <span class="empty-icon">🔍</span>
+            <h3>No cars match those filters</h3>
+            <p>Try widening your price range or clearing the search.</p>
+            <button class="btn btn-ghost" @onclick="ClearFilters">Clear filters</button>
+        </div>
+    }
+    else
+    {
+        <div class="car-grid">
+            @foreach (Car car in results)
+            {
+                <CarCard Car="car" />
+            }
+        </div>
+    }
+</section>
+
+@code {
+    private readonly CarCategory[] categories = Enum.GetValues<CarCategory>();
+    private IReadOnlyList<Car> results = Array.Empty<Car>();
+
+    private string searchTerm = "";
+    private string selectedCategory = "";
+    private string maxPrice = "";
+
+    protected override void OnInitialized()
+    {
+        ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        results = Catalog.FindMatching(BuildFilter());
+    }
+
+    private CarFilter BuildFilter()
+    {
+        return new CarFilter(
+            SearchTerm: searchTerm,
+            Category: ParseCategory(),
+            MaxPricePerDay: ParseMaxPrice());
+    }
+
+    private CarCategory? ParseCategory()
+    {
+        return Enum.TryParse(selectedCategory, out CarCategory category) ? category : null;
+    }
+
+    private decimal? ParseMaxPrice()
+    {
+        return decimal.TryParse(maxPrice, out decimal price) ? price : null;
+    }
+
+    private void ClearFilters()
+    {
+        searchTerm = "";
+        selectedCategory = "";
+        maxPrice = "";
+        ApplyFilter();
+    }
+}

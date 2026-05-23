@@ -1,0 +1,74 @@
+@page "/"
+@inject ICarCatalog Catalog
+
+<PageTitle>KOPI Car Rental — Drive something better</PageTitle>
+
+<section class="hero">
+    <div class="shell hero-inner">
+        <div class="hero-copy">
+            <span class="pill">⚡ Same-day pickup across the island</span>
+            <h1>Drive something<br /><span class="hero-accent">better</span> today.</h1>
+            <p>Browse a hand-picked fleet, lock in a daily rate with no hidden fees, and
+               collect your keys in minutes. From city runabouts to weekend SUVs.</p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="/cars">Browse the fleet</a>
+                <a class="btn btn-ghost" href="/lookup">Find my booking</a>
+            </div>
+            <div class="hero-stats">
+                <div><strong>120+</strong><span>vehicles ready</span></div>
+                <div><strong>4.9★</strong><span>customer rating</span></div>
+                <div><strong>24/7</strong><span>roadside help</span></div>
+            </div>
+        </div>
+        <div class="hero-art">
+            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1100&q=80"
+                 alt="A sports car on the open road" />
+        </div>
+    </div>
+</section>
+
+<section class="shell section">
+    <div class="section-head">
+        <div>
+            <span class="eyebrow">Featured fleet</span>
+            <h2>Popular right now</h2>
+        </div>
+        <a class="see-all" href="/cars">See all cars →</a>
+    </div>
+
+    <div class="car-grid">
+        @foreach (Car car in featured)
+        {
+            <CarCard Car="car" />
+        }
+    </div>
+</section>
+
+<section class="shell section">
+    <div class="steps">
+        <div class="step">
+            <span class="step-no">01</span>
+            <h3>Choose your car</h3>
+            <p>Filter by category, price, or seats and find the right fit for the trip.</p>
+        </div>
+        <div class="step">
+            <span class="step-no">02</span>
+            <h3>Pick your dates</h3>
+            <p>Set pickup and return. We show your total up front — no surprises.</p>
+        </div>
+        <div class="step">
+            <span class="step-no">03</span>
+            <h3>Hit the road</h3>
+            <p>Get an instant booking reference and collect your keys the same day.</p>
+        </div>
+    </div>
+</section>
+
+@code {
+    private IReadOnlyList<Car> featured = Array.Empty<Car>();
+
+    protected override void OnInitialized()
+    {
+        featured = Catalog.FeaturedCars(3);
+    }
+}
